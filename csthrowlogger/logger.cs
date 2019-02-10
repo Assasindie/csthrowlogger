@@ -12,7 +12,8 @@ namespace csthrowlogger
     {
         static GameStateListener gsl;
         static bool meTrying = false;
-        static int killsGotten = 0;
+        static int killsGotten = -1;
+        static bool meDying = false;
         static string map = "";
         public static void Start()
         {
@@ -42,9 +43,10 @@ namespace csthrowlogger
 
         static void OnNewGameState(GameState gs)
         {
-            if(gs.Player.State.Health == 0)
+            if(gs.Player.State.Health == 0 && !meDying)
             {
                 SendMessage("IMAGINE DIEING");
+                meDying = true;
             }
 
             if(gs.Player.State.RoundKills > 0 && gs.Player.State.RoundKills != killsGotten)
@@ -104,6 +106,7 @@ namespace csthrowlogger
         {
             SendMessage("Beginning round " + e.TotalRound);
             meTrying = false;
+            meDying = false;
         }
 
         //sends to console and webhook
