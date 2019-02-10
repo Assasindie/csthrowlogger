@@ -107,6 +107,7 @@ namespace csthrowlogger
             SendMessage("Beginning round " + e.TotalRound);
             meTrying = false;
             meDying = false;
+            killsGotten = -1;
         }
 
         //sends to console and webhook
