@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using System.Net.Http;
+using CSGSI;
+using CSGSI.Nodes;
 
 namespace csthrowlogger
 {
@@ -10,6 +10,8 @@ namespace csthrowlogger
     {
         static void Main(string[] args)
         {
+            logger.Start();
         }
+
     }
 }
