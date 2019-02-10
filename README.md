@@ -28,3 +28,5 @@ You will also need to create a gamestate_integration_name.cfg in your csgo confi
 		"allplayers_match_stats"	"1"
 	}
 }
+```
+You will also need to change the webhook credentials in webhook.cs to be those of your server with the first field being the webhook id and second field being webhook token :)!
