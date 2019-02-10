@@ -92,16 +92,16 @@ namespace csthrowlogger
             if(gsl.CurrentGameState.Map.TeamT.Score == 16)
             {
                 SendMessage(gsl.CurrentGameState.Player.Team.ToString() == "T" ? "We must have screwed up and won :(!" : "We lost FeelsGoodMan");
-                SendMessage("End of game statistics: \n " + gsl.CurrentGameState.Player.MatchStats.Kills.ToString() + " kills, "
+                SendMessage("End of game statistics for " +gsl.CurrentGameState.Player.Name + " : \n " + gsl.CurrentGameState.Player.MatchStats.Kills.ToString() + " kills, "
                     + gsl.CurrentGameState.Player.MatchStats.Deaths.ToString() + " deaths, " + gsl.CurrentGameState.Player.MatchStats.MVPs.ToString()
                     + " mvps!" );
             }
             if(gsl.CurrentGameState.Map.TeamCT.Score == 16)
             {
                 SendMessage(gsl.CurrentGameState.Player.Team.ToString() == "CT" ? "We must have screwed up and won :(!" : "We lost FeelsGoodMan");
-                SendMessage("End of game statistics: \n " + gsl.CurrentGameState.Player.MatchStats.Kills.ToString() + " kills, "
-                + gsl.CurrentGameState.Player.MatchStats.Deaths.ToString() + " deaths, " + gsl.CurrentGameState.Player.MatchStats.MVPs.ToString()
-                + " mvps!");
+                SendMessage("End of game statistics for " + gsl.CurrentGameState.Player.Name + " : \n " + gsl.CurrentGameState.Player.MatchStats.Kills.ToString() + " kills, "
+                    + gsl.CurrentGameState.Player.MatchStats.Deaths.ToString() + " deaths, " + gsl.CurrentGameState.Player.MatchStats.MVPs.ToString()
+                    + " mvps!");
             }
                
         }
