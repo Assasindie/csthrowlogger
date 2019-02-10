@@ -10,7 +10,7 @@ namespace csthrowlogger
     {
         static void Main(string[] args)
         {
-            logger.Start();
+            Logger.Start();
         }
 
     }
