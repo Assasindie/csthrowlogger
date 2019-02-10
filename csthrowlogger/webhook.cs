@@ -11,7 +11,7 @@ namespace csthrowlogger
         {
             try
             {
-                DiscordWebhookClient discord = new DiscordWebhookClient(544127788039536674, "xQYThRwfC6DoOEnRKSNoF5yrppKQWlrgfB11MF28negvok-uFS2SSfl6lHl4jJucOYSH");
+                DiscordWebhookClient discord = new DiscordWebhookClient(544084693658894337, "JgcxpJtbO7PbhgDhSv0C86QaXKw_Z5UCgiFC6OmXaVOETCZ54HFjYzsdx9DTASSAqEHa");
                 discord.SendMessageAsync(message);
             }
             catch (Exception)

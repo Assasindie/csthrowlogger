@@ -45,14 +45,14 @@ namespace csthrowlogger
         {
             if(gs.Player.State.Health == 0 && !meDying)
             {
-                SendMessage("IMAGINE DIEING");
+                SendMessage("IMAGINE DIEING  @" + gs.Player.Name);
                 meDying = true;
             }
 
             if(gs.Player.State.RoundKills > 0 && gs.Player.State.RoundKills != killsGotten)
             {
                 killsGotten = gs.Player.State.RoundKills;
-                SendMessage("IMAGINE TRYING AND GETTING " + killsGotten + "KILL(S)");
+                SendMessage("IMAGINE TRYING AND GETTING " + killsGotten + "KILL(S) @" + gs.Player.Name);
             }
 
             if (map != gs.Map.Name && gs.Map.Name != String.Empty)
@@ -71,7 +71,7 @@ namespace csthrowlogger
             if (!meTrying && (!listofweapons.Any(gs.Player.Weapons.ActiveWeapon.Name.Contains)))
             {
                 meTrying = true;
-                SendMessage("IMAGINE TRYING");
+                SendMessage("IMAGINE TRYING @" + gs.Player.Name);
             }
         }
 
@@ -92,8 +92,9 @@ namespace csthrowlogger
             if(gsl.CurrentGameState.Map.TeamT.Score == 16)
             {
                 SendMessage(gsl.CurrentGameState.Player.Team.ToString() == "T" ? "We must have screwed up and won :(!" : "We lost FeelsGoodMan");
-                SendMessage("End of game statistics: \n kills : " + gsl.CurrentGameState.Player.MatchStats.Kills.ToString() + " deaths : "
-                    + gsl.CurrentGameState.Player.MatchStats.Deaths.ToString() + " mvps : " + gsl.CurrentGameState.Player.MatchStats.MVPs.ToString());
+                SendMessage("End of game statistics: \n " + gsl.CurrentGameState.Player.MatchStats.Kills.ToString() + " kills, "
+                    + gsl.CurrentGameState.Player.MatchStats.Deaths.ToString() + " deaths, " + gsl.CurrentGameState.Player.MatchStats.MVPs.ToString()
+                    + " mvps!" );
             }
             if(gsl.CurrentGameState.Map.TeamCT.Score == 16)
             {
