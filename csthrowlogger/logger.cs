@@ -11,7 +11,8 @@ namespace csthrowlogger
     class Logger
     {
         static GameStateListener gsl;
-        static bool metrying = false;
+        static bool meTrying = false;
+        static int killsGotten = 0;
         static string map = "";
         public static void Start()
         {
@@ -41,9 +42,20 @@ namespace csthrowlogger
 
         static void OnNewGameState(GameState gs)
         {
+            if(gs.Player.State.Health == 0)
+            {
+                SendMessage("IMAGINE DIEING");
+            }
+
+            if(gs.Player.State.RoundKills > 0 && gs.Player.State.RoundKills != killsGotten)
+            {
+                killsGotten = gs.Player.State.RoundKills;
+                SendMessage("IMAGINE TRYING AND GETTING " + killsGotten + "KILL(S)");
+            }
+
             if (map != gs.Map.Name && gs.Map.Name != String.Empty)
             {
-                SendMessage("Currently on Map : " + gs.Map.Name);
+                SendMessage("Currently on Map : " + gs.Map.Mode + " " + gs.Map.Name);
                 map = gs.Map.Name;
             }
 
@@ -54,10 +66,10 @@ namespace csthrowlogger
                 "weapon_glock"
             };
 
-            if (!metrying && (!listofweapons.Any(gs.Player.Weapons.ActiveWeapon.Name.Contains)))
+            if (!meTrying && (!listofweapons.Any(gs.Player.Weapons.ActiveWeapon.Name.Contains)))
             {
-                metrying = true;
-                SendMessage("Ye im trying u mad lmao!!!!!!!!");
+                meTrying = true;
+                SendMessage("IMAGINE TRYING");
             }
         }
 
@@ -78,6 +90,8 @@ namespace csthrowlogger
             if(gsl.CurrentGameState.Map.TeamT.Score == 16)
             {
                 SendMessage(gsl.CurrentGameState.Player.Team.ToString() == "T" ? "We must have screwed up and won :(!" : "We lost FeelsGoodMan");
+                SendMessage("End of game statistics: \n kills : " + gsl.CurrentGameState.Player.MatchStats.Kills.ToString() + " deaths : "
+                    + gsl.CurrentGameState.Player.MatchStats.Deaths.ToString() + " mvps : " + gsl.CurrentGameState.Player.MatchStats.MVPs.ToString());
             }
             if(gsl.CurrentGameState.Map.TeamCT.Score == 16)
             {
@@ -88,7 +102,8 @@ namespace csthrowlogger
 
         static void RoundBegin(CSGSI.Events.RoundBeginEventArgs e)
         {
-            metrying = false;
+            SendMessage("Beginning round " + e.TotalRound);
+            meTrying = false;
         }
 
         //sends to console and webhook
