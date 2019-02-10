@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27004.2005
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "csthrowlogger", "csthrowlogger\csthrowlogger.csproj", "{F668F55D-A123-4503-B447-6DE15087CA45}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F668F55D-A123-4503-B447-6DE15087CA45}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F668F55D-A123-4503-B447-6DE15087CA45}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F668F55D-A123-4503-B447-6DE15087CA45}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F668F55D-A123-4503-B447-6DE15087CA45}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AF985DE6-AA13-4C09-B53B-79D7F6ADEBDC}
+	EndGlobalSection
+EndGlobal
