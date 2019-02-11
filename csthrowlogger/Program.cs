@@ -10,8 +10,9 @@ namespace csthrowlogger
     {
         static void Main(string[] args)
         {
+            Webhook.ChangeDir();
             Logger.Start();
-        }
+        }   
 
     }
 }
