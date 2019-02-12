@@ -117,8 +117,8 @@ namespace csthrowlogger
         //sends to console and webhook
         public static void SendMessage(string message)
         {
-            Console.WriteLine(message);
-            Webhook.SendMessage(message);
+            Console.WriteLine(System.DateTime.Now + " " + message);
+            Webhook.SendMessage(System.DateTime.Now + " " + message);
         }
     }
 }
