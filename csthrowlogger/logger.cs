@@ -1,10 +1,9 @@
 ﻿using CSGSI;
+using DiscordRPC;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace csthrowlogger
 {
@@ -15,8 +14,13 @@ namespace csthrowlogger
         static int killsGotten = -1;
         static bool meDying = false;
         static string map = "";
+        public static DiscordRpcClient client;
+        public static DateTime roundStart = DateTime.UtcNow;
+
         public static void Start()
         {
+            Logger log = new Logger();
+            log.Initialize();
             if (!GetCsgo())
             {
                 Console.WriteLine("CSGO not open, please try again with CSGO open! Press any key to exit");
@@ -43,7 +47,26 @@ namespace csthrowlogger
 
         static void OnNewGameState(GameState gs)
         {
-            if(gs.Player.State.Health == 0 && !meDying)
+            if (gsl.CurrentGameState.Provider.SteamID == gsl.CurrentGameState.Player.SteamID)
+            {
+                client.SetPresence(new RichPresence()
+                {
+                    Details = gsl.CurrentGameState.Player.MatchStats.Kills + "-" + gsl.CurrentGameState.Player.MatchStats.Assists + "-" + gsl.CurrentGameState.Player.MatchStats.Deaths
+                    + " " + gsl.CurrentGameState.Player.Weapons.ActiveWeapon.Name,
+
+                    State = "CT : " + gsl.CurrentGameState.Map.TeamCT.Score + " T : " + gsl.CurrentGameState.Map.TeamT.Score + " " + gsl.CurrentGameState.Map.Phase,
+                    Assets = new Assets()
+                    {
+                        LargeImageKey = gsl.CurrentGameState.Map.Name,
+                        LargeImageText = gsl.CurrentGameState.Map.Name + " - " + gsl.CurrentGameState.Map.Mode.ToString(),
+                        SmallImageKey = "team" + gsl.CurrentGameState.Player.Team.ToString().ToLower(),
+                        SmallImageText = "Team " + gsl.CurrentGameState.Player.Team.ToString() + " - " + gsl.CurrentGameState.Player.State.Health + " Health",
+                    },
+                    Timestamps = new Timestamps(roundStart),
+                });
+            }
+            client.Invoke();
+            if (gs.Player.State.Health == 0 && !meDying)
             {
                 SendMessage("IMAGINE DIEING  @" + gs.Player.Name);
                 meDying = true;
@@ -112,6 +135,8 @@ namespace csthrowlogger
             meTrying = false;
             meDying = false;
             killsGotten = -1;
+            roundStart = DateTime.UtcNow;
+            client.Invoke();
         }
 
         //sends to console and webhook
@@ -119,6 +144,29 @@ namespace csthrowlogger
         {
             Console.WriteLine(System.DateTime.Now + " " + message);
             Webhook.SendMessage(System.DateTime.Now + " " + message);
+        }
+
+        void Initialize()
+        {
+            /*
+            Create a discord client
+            NOTE: 	If you are using Unity3D, you must use the full constructor and define
+                     the pipe connection as DiscordRPC.IO.NativeNamedPipeClient
+            */
+            client = new DiscordRpcClient("545493713779163147");
+
+            //Subscribe to events
+            client.OnReady += (sender, e) =>
+            {
+                Console.WriteLine("Received Ready from user {0}", e.User.Username);
+            };
+
+            client.OnPresenceUpdate += (sender, e) =>
+            {
+
+            };
+
+            client.Initialize();
         }
     }
 }

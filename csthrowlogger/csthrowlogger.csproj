@@ -44,6 +44,9 @@
     <Reference Include="Discord.Net.Webhook, Version=2.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Discord.Net.Webhook.2.0.1\lib\netstandard1.3\Discord.Net.Webhook.dll</HintPath>
     </Reference>
+    <Reference Include="DiscordRPC">
+      <HintPath>D:\discord-rpc-csharp\DiscordRPC\bin\Debug\DiscordRPC.dll</HintPath>
+    </Reference>
     <Reference Include="DotNetEnv, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\DotNetEnv.1.2.0\lib\netstandard1.3\DotNetEnv.dll</HintPath>
     </Reference>
