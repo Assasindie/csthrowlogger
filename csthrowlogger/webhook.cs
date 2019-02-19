@@ -10,9 +10,8 @@ namespace csthrowlogger
         static string token;
         static string webhookID;
 
-        public static void ChangeDir()
+        public static void LoadEnv()
         {
-            Environment.CurrentDirectory = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, @"..\..\..\"));
             try { Env.Load(); }
             catch (Exception)
             {

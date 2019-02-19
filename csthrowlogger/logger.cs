@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Timers;
 
 namespace csthrowlogger
 {
@@ -16,9 +17,17 @@ namespace csthrowlogger
         static string map = "";
         public static DiscordRpcClient client;
         public static DateTime roundStart = DateTime.UtcNow;
+        public static bool stopped = false;
+        public static Timer csCheck;
 
         public static void Start()
         {
+            csCheck = new Timer(10000)
+            {
+                AutoReset = true
+            };
+            csCheck.Elapsed += CsCheck_Elapsed;
+            csCheck.Start();
             Logger log = new Logger();
             log.Initialize();
             if (!GetCsgo())
@@ -39,6 +48,20 @@ namespace csthrowlogger
             SendMessage("Started Tracking Throwers!!!");
         }
 
+        private static void CsCheck_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            if (!GetCsgo())
+            {
+                SendMessage("CSGO is no longer open!");
+                client.ClearPresence();
+                stopped = true;
+            }else if (stopped)
+            {
+                roundStart = DateTime.UtcNow;
+                stopped = false;
+            }
+        }
+
         public static bool GetCsgo()
         {
             Process[] csgo = Process.GetProcessesByName("csgo");
@@ -47,54 +70,71 @@ namespace csthrowlogger
 
         static void OnNewGameState(GameState gs)
         {
-            if (gsl.CurrentGameState.Provider.SteamID == gsl.CurrentGameState.Player.SteamID)
+            if (gsl.CurrentGameState.Map.Name == "" && gsl.CurrentGameState.Player.MatchStats.Kills == -1)
             {
                 client.SetPresence(new RichPresence()
                 {
-                    Details = gsl.CurrentGameState.Player.MatchStats.Kills + "-" + gsl.CurrentGameState.Player.MatchStats.Assists + "-" + gsl.CurrentGameState.Player.MatchStats.Deaths
-                    + " " + gsl.CurrentGameState.Player.Weapons.ActiveWeapon.Name,
-
-                    State = "CT : " + gsl.CurrentGameState.Map.TeamCT.Score + " T : " + gsl.CurrentGameState.Map.TeamT.Score + " " + gsl.CurrentGameState.Map.Phase,
+                    Details = "In Main Menu",
+                    State = "Main Menu",
                     Assets = new Assets()
                     {
-                        LargeImageKey = gsl.CurrentGameState.Map.Name,
-                        LargeImageText = gsl.CurrentGameState.Map.Name + " - " + gsl.CurrentGameState.Map.Mode.ToString(),
-                        SmallImageKey = "team" + gsl.CurrentGameState.Player.Team.ToString().ToLower(),
-                        SmallImageText = "Team " + gsl.CurrentGameState.Player.Team.ToString() + " - " + gsl.CurrentGameState.Player.State.Health + " Health",
+                        LargeImageKey = "mainmenu",
+                        LargeImageText = "Main Menu"
                     },
                     Timestamps = new Timestamps(roundStart),
                 });
             }
-            client.Invoke();
-            if (gs.Player.State.Health == 0 && !meDying)
+            else
             {
-                SendMessage("IMAGINE DIEING  @" + gs.Player.Name);
-                meDying = true;
-            }
+                if (gsl.CurrentGameState.Provider.SteamID == gsl.CurrentGameState.Player.SteamID)
+                {
+                    client.SetPresence(new RichPresence()
+                    {
+                        Details = gsl.CurrentGameState.Player.MatchStats.Kills + "-" + gsl.CurrentGameState.Player.MatchStats.Assists + "-" + gsl.CurrentGameState.Player.MatchStats.Deaths
+                        + " " + gsl.CurrentGameState.Player.Weapons.ActiveWeapon.Name,
 
-            if(gs.Player.State.RoundKills > 0 && gs.Player.State.RoundKills != killsGotten)
-            {
-                killsGotten = gs.Player.State.RoundKills;
-                SendMessage("IMAGINE TRYING AND GETTING " + killsGotten + "KILL(S) @" + gs.Player.Name);
-            }
+                        State = "CT : " + gsl.CurrentGameState.Map.TeamCT.Score + " T : " + gsl.CurrentGameState.Map.TeamT.Score + " " + gsl.CurrentGameState.Map.Phase,
+                        Assets = new Assets()
+                        {
+                            LargeImageKey = gsl.CurrentGameState.Map.Name,
+                            LargeImageText = gsl.CurrentGameState.Map.Name + " - " + gsl.CurrentGameState.Map.Mode.ToString(),
+                            SmallImageKey = "team" + gsl.CurrentGameState.Player.Team.ToString().ToLower(),
+                            SmallImageText = "Team " + gsl.CurrentGameState.Player.Team.ToString() + " - " + gsl.CurrentGameState.Player.State.Health + " Health",
+                        },
+                        Timestamps = new Timestamps(roundStart),
+                    });
+                }
+                client.Invoke();
+                if (gs.Player.State.Health == 0 && !meDying)
+                {
+                    SendMessage("IMAGINE DIEING  @" + gs.Player.Name);
+                    meDying = true;
+                }
 
-            if (map != gs.Map.Name && gs.Map.Name != String.Empty)
-            {
-                SendMessage("Currently on Map : " + gs.Map.Mode + " " + gs.Map.Name);
-                map = gs.Map.Name;
-            }
+                if (gs.Player.State.RoundKills > 0 && gs.Player.State.RoundKills != killsGotten)
+                {
+                    killsGotten = gs.Player.State.RoundKills;
+                    SendMessage("IMAGINE TRYING AND GETTING " + killsGotten + "KILL(S) @" + gs.Player.Name);
+                }
 
-            List<String> listofweapons = new List<String>(3)
+                if (map != gs.Map.Name && gs.Map.Name != String.Empty)
+                {
+                    SendMessage("Currently on Map : " + gs.Map.Mode + " " + gs.Map.Name);
+                    map = gs.Map.Name;
+                }
+
+                List<String> listofweapons = new List<String>(3)
             {
                 "weapon_c4",
                 "weapon_usp_silencer",
                 "weapon_glock"
             };
 
-            if (!meTrying && (!listofweapons.Any(gs.Player.Weapons.ActiveWeapon.Name.Contains)))
-            {
-                meTrying = true;
-                SendMessage("IMAGINE TRYING @" + gs.Player.Name);
+                if (!meTrying && (!listofweapons.Any(gs.Player.Weapons.ActiveWeapon.Name.Contains)))
+                {
+                    meTrying = true;
+                    SendMessage("IMAGINE TRYING @" + gs.Player.Name);
+                }
             }
         }
 
